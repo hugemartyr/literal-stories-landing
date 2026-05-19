@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -37,7 +39,9 @@ export async function POST(req: Request) {
       success: true,
       invite,
     });
-  } catch {
+  } catch (error) {
+    console.error('Failed to create invitation request', error);
+
     return NextResponse.json(
       { error: 'Something went wrong' },
       { status: 500 }
