@@ -1,0 +1,1805 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asterix &middot; Preface</title>
+  <meta name="description" content="A literary correspondence. One reader a day, found by the way they read. Beta opens in batches of fifty — by invitation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Libre+Caslon+Text:ital,wght@0,400;1,400;1,700&family=Jost:wght@300;400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink:     #0F0C10;
+      --ink-2:   #1A1418;
+      --paper:   #F4ECDC;
+      --paper-2: #E9DFC8;
+      --paper-3: #DFD3B5;
+      --blush:   #DDB5B5;
+      --maroon:  #6B1E3A;
+      --maroon-d:#4F1428;
+      --rose:    #A8425A;
+      --gold:    #B8965A;
+      --gold-2:  #8C6F3F;
+      --mist:    rgba(217,206,204,0.55);
+      --rule:    rgba(184,150,90,0.20);
+      --display: 'Cormorant Garamond', Georgia, serif;
+      --caslon:  'Libre Caslon Text', Georgia, serif;
+      --ui:      'Jost', system-ui, sans-serif;
+      --hand:    'Caveat', cursive;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--ui);
+    }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-feature-settings: "kern", "liga", "onum";
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: var(--maroon); color: var(--blush); }
+    a { color: inherit; text-decoration: none; }
+
+    /* ============ atmosphere ============ */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: -2;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 8%, rgba(184,150,90,0.10), transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 95%, rgba(107,30,58,0.10), transparent 60%);
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: -1;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.92  0 0 0 0 0.86  0 0 0 0 0.74  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+
+    /* ============ particle dust ============ */
+    .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      filter: blur(0.5px);
+      animation: drift var(--t, 10s) var(--d, 0s) ease-in-out infinite;
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateY(0); opacity: 0.18; }
+      50%      { transform: translateY(-26px) translateX(8px); opacity: 0.5; }
+    }
+
+    /* ============ FUNCTIONAL BOOKMARK NAV ============ */
+    /* Fixed left rail with five chapter ticks. Active = highlighted.
+       Click any tick to scroll to that section. Click the marker dot
+       itself to save your position to localStorage. */
+    .nav {
+      position: fixed;
+      top: 50%;
+      left: 22px;
+      transform: translateY(-50%);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+    }
+    .nav-track {
+      position: absolute;
+      left: 7px;
+      top: -16px; bottom: -16px;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, var(--rule) 10%, var(--rule) 90%, transparent);
+    }
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: var(--ui);
+      color: var(--mist);
+      transition: color 0.25s ease;
+    }
+    .nav-item:hover { color: var(--paper); }
+    .nav-item:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+    .nav-tick {
+      width: 15px; height: 15px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 1px solid var(--gold-2);
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+      flex-shrink: 0;
+      z-index: 2;
+      position: relative;
+    }
+    .nav-label {
+      font-size: 9.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .nav-item:hover .nav-label,
+    .nav-item.active .nav-label {
+      opacity: 1;
+      transform: none;
+    }
+    .nav-item.active .nav-tick {
+      background: var(--maroon);
+      border-color: var(--maroon);
+      transform: scale(1.15);
+      box-shadow: 0 0 0 3px rgba(107,30,58,0.18);
+    }
+    .nav-item.active .nav-label { color: var(--gold); }
+
+    /* Bookmark "save my place" button — a tiny ribbon at the top of the nav */
+    .nav-save {
+      position: relative;
+      width: 22px;
+      height: 32px;
+      background: var(--maroon);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      margin: 0 0 12px 0;
+      transition: transform 0.25s ease, background 0.25s ease;
+      align-self: flex-start;
+      margin-left: -3px;
+    }
+    .nav-save::before {
+      content: '';
+      position: absolute;
+      top: 4px; left: 50%;
+      transform: translateX(-50%);
+      width: 1px; height: 14px;
+      background: var(--gold);
+      opacity: 0.6;
+    }
+    .nav-save:hover { transform: translateY(-1px); background: var(--rose); }
+    .nav-save:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
+    .nav-save[data-saved="true"] {
+      background: var(--gold);
+    }
+
+    /* toast that confirms save */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--paper);
+      color: var(--ink);
+      padding: 14px 22px;
+      border-radius: 2px;
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 15px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.2,.7,.2,1);
+      z-index: 100;
+      max-width: 320px;
+      text-align: center;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast .toast-mark {
+      color: var(--gold);
+      font-family: var(--ui);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ============ stage ============ */
+    .stage {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 32px 80px;
+    }
+
+    /* ============ topbar ============ */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0 0;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--mist);
+    }
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--paper);
+    }
+    .wordmark svg { color: var(--gold); }
+    .topbar .here { color: var(--gold); font-weight: 600; }
+
+    /* ============ reveal base ============ */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 1.1s cubic-bezier(.2,.7,.2,1), transform 1.1s cubic-bezier(.2,.7,.2,1);
+    }
+    [data-reveal].in { opacity: 1; transform: none; }
+    [data-reveal-delay] { transition-delay: var(--d, 0s); }
+
+    /* ============ HERO (matches the Vercel reference) ============ */
+    .hero {
+      position: relative;
+      padding: 64px 0 56px;
+      min-height: 78vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .hero-content {
+      max-width: 640px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--ui);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 36px;
+    }
+    .hero-eyebrow svg { color: var(--gold); opacity: 0.85; }
+    .hero h1 {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(54px, 9.2vw, 108px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin: 0 0 36px;
+      color: var(--paper);
+    }
+    .hero h1 .em {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      color: var(--blush);
+      letter-spacing: -0.01em;
+    }
+    .hero-body {
+      font-family: var(--caslon);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(16px, 1.9vw, 18px);
+      line-height: 1.55;
+      color: rgba(217,206,204,0.78);
+      max-width: 460px;
+      margin: 0 0 40px;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+    .cta-filled {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--maroon);
+      color: var(--paper);
+      padding: 18px 28px;
+      font-family: var(--ui);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--maroon);
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease, letter-spacing 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-filled::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--rose);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(.7,.05,.2,1);
+      z-index: 0;
+    }
+    .cta-filled > * { position: relative; z-index: 1; }
+    .cta-filled:hover {
+      border-color: var(--rose);
+      letter-spacing: 0.36em;
+    }
+    .cta-filled:hover::before { transform: scaleX(1); }
+    .cta-filled:active { transform: translateY(1px); }
+
+    .cta-ghost {
+      font-family: var(--ui);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--mist);
+      transition: color 0.25s ease, letter-spacing 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cta-ghost:hover {
+      color: var(--gold);
+      letter-spacing: 0.36em;
+    }
+    .cta-ghost .arr {
+      transition: transform 0.3s ease;
+    }
+    .cta-ghost:hover .arr { transform: translateX(4px); }
+
+    .hero-foot {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--ui);
+      font-size: 10.5px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: rgba(217,206,204,0.5);
+      font-weight: 500;
+    }
+    .hero-foot svg { color: var(--gold); }
+
+    /* hero marginalia */
+    .scrawl-hero {
+      position: absolute;
+      top: 52%;
+      right: 0;
+      transform: translateY(-50%) rotate(-4deg);
+      font-family: var(--hand);
+      font-size: 22px;
+      line-height: 1.05;
+      color: var(--rose);
+      max-width: 150px;
+      text-align: left;
+      z-index: 3;
+    }
+    .scrawl-hero::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 14px;
+      width: 22px;
+      height: 1px;
+      background: var(--rose);
+      transform: rotate(8deg);
+    }
+    @media (max-width: 920px) { .scrawl-hero { display: none; } }
+
+    /* ============ ornamental star divider ============ */
+    .crux {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 48px auto;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+    .crux .line {
+      flex: 0 0 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+    }
+
+    /* ============ CENTERPIECE LETTER (the sample arrival) ============ */
+    .letter-section {
+      display: flex;
+      justify-content: center;
+      margin: 24px 0 64px;
+      perspective: 1400px;
+      position: relative;
+    }
+    .letter-section .stamp {
+      position: absolute;
+      top: -24px;
+      right: 12%;
+      transform: rotate(6deg);
+      font-family: var(--hand);
+      font-size: 18px;
+      color: var(--rose);
+      z-index: 4;
+    }
+    @media (max-width: 600px) { .letter-section .stamp { display: none; } }
+
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      background:
+        radial-gradient(ellipse at 12% 0%, rgba(255,255,255,0.45), transparent 40%),
+        linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+      color: #2B1A20;
+      padding: 32px 34px 30px;
+      border-radius: 3px;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.55) inset,
+        0 0 0 1px rgba(0,0,0,0.06),
+        0 8px 18px rgba(0,0,0,0.35),
+        0 30px 60px rgba(0,0,0,0.45);
+      transform: rotate(-0.5deg);
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 0% 0%, rgba(120,80,40,0.07), transparent 30%),
+        radial-gradient(ellipse at 100% 100%, rgba(120,80,40,0.09), transparent 35%);
+      mix-blend-mode: multiply;
+    }
+    .card::after {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+      opacity: 0.16;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.40  0 0 0 0 0.25  0 0 0 0.65 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+      mix-blend-mode: multiply;
+    }
+
+    .card-fold {
+      transition: clip-path 1.4s cubic-bezier(.2,.7,.2,1);
+      clip-path: inset(0 0 50% 0);
+    }
+    .card.opened .card-fold { clip-path: inset(0 0 0% 0); }
+
+    .crease {
+      position: absolute;
+      left: 8%; right: 8%;
+      top: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(43,26,32,0.25), transparent);
+      opacity: 1;
+      transition: opacity 1.2s ease;
+      z-index: 5;
+    }
+    .card.opened .crease { opacity: 0; }
+
+    .card-corner {
+      position: absolute;
+      top: 0; right: 0;
+      width: 36px; height: 36px;
+      background: linear-gradient(225deg, transparent 50%, rgba(0,0,0,0.08) 50%);
+      z-index: 4;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 0.5px solid rgba(43,26,32,0.18);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 2;
+    }
+    .card-header .addressed {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--maroon);
+      letter-spacing: 0.01em;
+    }
+    .card-header .chapter-tag {
+      font-family: var(--ui);
+      font-size: 9.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(43,26,32,0.55);
+      font-weight: 500;
+    }
+
+    .excerpt {
+      font-family: var(--caslon);
+      font-size: 16px;
+      line-height: 1.65;
+      color: #2B1A20;
+      font-style: italic;
+      position: relative;
+      z-index: 2;
+    }
+    .excerpt .lead {
+      font-family: var(--caslon);
+      font-variant: small-caps;
+      font-style: normal;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--maroon);
+    }
+    .excerpt-meta {
+      margin-top: 10px;
+      font-family: var(--ui);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(43,26,32,0.5);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .margin {
+      position: absolute;
+      right: 22px;
+      top: 138px;
+      width: 110px;
+      transform: rotate(-6deg);
+      font-family: var(--hand);
+      font-size: 22px;
+      color: var(--rose);
+      line-height: 1.05;
+      z-index: 6;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.9s ease 1.0s;
+    }
+    .card.opened .margin { opacity: 1; }
+    .margin::before {
+      content: '';
+      position: absolute;
+      left: -18px; top: 8px;
+      width: 14px; height: 1px;
+      background: var(--rose);
+      transform: rotate(8deg);
+    }
+
+    .card-foot {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 30px;
+      padding-top: 18px;
+      border-top: 0.5px dashed rgba(43,26,32,0.18);
+      position: relative;
+      z-index: 2;
+    }
+    .portrait { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .portrait-disc {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #d9c4a7 0%, #a98261 45%, #6e4a35 100%);
+      filter: blur(6px);
+      transition: filter 0.8s ease;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 1px rgba(43,26,32,0.12);
+    }
+    .portrait-disc.unblurring { filter: blur(4px); }
+    .portrait-label {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 12.5px;
+      line-height: 1.3;
+      color: rgba(43,26,32,0.7);
+      max-width: 160px;
+    }
+
+    .seal {
+      position: relative;
+      width: 64px; height: 64px;
+      flex-shrink: 0;
+    }
+    .seal-half {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      transition: transform 0.9s cubic-bezier(.2,.7,.2,1) 0.2s;
+    }
+    .seal-half.left  { left: 0; }
+    .seal-half.right { right: 0; }
+    .seal-half svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 64px; height: 64px;
+    }
+    .seal-half.right svg { transform: translateX(-32px); }
+    .card.opened .seal-half.left  { transform: translateX(-7px) rotate(-3deg); }
+    .card.opened .seal-half.right { transform: translateX(7px) rotate(3deg); }
+
+    /* ============ CHAPTERS ============ */
+    .chapter {
+      position: relative;
+      max-width: 540px;
+      margin: 0 auto 96px;
+      padding-top: 36px;
+    }
+    .chapter:last-of-type { margin-bottom: 64px; }
+
+    .chapter-ribbon {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-30px);
+      opacity: 0;
+      width: 36px;
+      height: 64px;
+      background: linear-gradient(180deg, var(--maroon) 0%, var(--maroon-d) 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 1px 0 0 rgba(255,255,255,0.06);
+      transition: transform 0.9s cubic-bezier(.2,.7,.2,1) 0.1s, opacity 0.9s ease 0.1s;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 10px;
+    }
+    .chapter.in .chapter-ribbon {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .chapter-ribbon .num {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 16px;
+      color: var(--blush);
+      letter-spacing: 0.02em;
+    }
+    .chapter-ribbon::before {
+      content: '';
+      position: absolute;
+      top: 6px; left: 50%;
+      transform: translateX(-50%);
+      width: 0.5px; height: 32px;
+      background: var(--gold);
+      opacity: 0.55;
+    }
+
+    .chapter-head { text-align: center; margin: 26px 0 30px; }
+    .chapter-label {
+      font-family: var(--ui);
+      font-size: 10px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .chapter-head h2 {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(28px, 4.2vw, 42px);
+      line-height: 1.12;
+      letter-spacing: -0.005em;
+      margin: 0;
+      color: var(--paper);
+    }
+    .chapter-head h2 .em {
+      font-family: var(--caslon);
+      font-style: italic;
+      font-weight: 700;
+      color: var(--blush);
+    }
+
+    .prose {
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: 18px;
+      line-height: 1.65;
+      color: rgba(217,206,204,0.78);
+      max-width: 520px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .prose p { margin: 0 0 18px; font-style: italic; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose .drop {
+      font-family: var(--caslon);
+      float: left;
+      font-size: 54px;
+      line-height: 0.9;
+      padding: 6px 10px 0 0;
+      color: var(--blush);
+      font-style: italic;
+      font-weight: 700;
+    }
+    .prose em.accent {
+      font-family: var(--caslon);
+      font-style: italic;
+      font-weight: 700;
+      color: var(--blush);
+    }
+
+    /* in-prose marginalia (positioned relative to the chapter container) */
+    .scrawl {
+      position: absolute;
+      font-family: var(--hand);
+      color: var(--rose);
+      line-height: 1.05;
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0;
+      transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+      transform: translateY(8px);
+    }
+    .chapter.in .scrawl, [data-reveal].in .scrawl { opacity: 1; transform: none; }
+    .scrawl.tilted-left  { transform: rotate(-5deg) translateY(8px); }
+    .scrawl.tilted-right { transform: rotate(4deg)  translateY(8px); }
+    .chapter.in .scrawl.tilted-left,
+    [data-reveal].in .scrawl.tilted-left  { transform: rotate(-5deg); }
+    .chapter.in .scrawl.tilted-right,
+    [data-reveal].in .scrawl.tilted-right { transform: rotate(4deg); }
+
+    .scrawl-i  {
+      top: 100px; right: -120px; max-width: 130px;
+      font-size: 21px;
+    }
+    .scrawl-i::before {
+      content: '';
+      position: absolute; left: -30px; top: 12px;
+      width: 24px; height: 1px; background: var(--rose); transform: rotate(8deg);
+    }
+    .scrawl-ii {
+      bottom: 32px; left: -120px; max-width: 110px;
+      font-size: 24px;
+      color: var(--maroon);
+    }
+    .scrawl-ii::after {
+      content: '';
+      position: absolute; right: -28px; bottom: 6px;
+      width: 22px; height: 1px; background: var(--maroon); transform: rotate(-6deg);
+    }
+    @media (max-width: 1000px) {
+      .scrawl-i  { right: 4px;  top: -36px; max-width: 220px; font-size: 20px; }
+      .scrawl-i::before { display: none; }
+      .scrawl-ii { left: 4px;  bottom: -42px; max-width: 200px; font-size: 22px; }
+      .scrawl-ii::after { display: none; }
+    }
+    @media (max-width: 540px) {
+      .scrawl-i, .scrawl-ii { display: none; }
+    }
+
+    /* ============ CHAPTER III — the editors' manifesto (envelope+open) ============ */
+    .manifesto-banner {
+      text-align: center;
+      margin: 0 auto 0;
+      max-width: 640px;
+    }
+    .manifesto-eyebrow {
+      font-family: var(--ui);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .manifesto-banner h2 {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(32px, 4.6vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin: 0 0 18px;
+      color: var(--paper);
+    }
+    .manifesto-banner h2 .em {
+      font-family: var(--caslon);
+      font-style: italic;
+      font-weight: 700;
+      color: var(--blush);
+    }
+    .manifesto-rule {
+      width: 70%;
+      max-width: 420px;
+      height: 1px;
+      background: var(--rule);
+      margin: 24px auto 0;
+    }
+
+    /* The paper card that holds the editor's letter content */
+    .manifesto-paper {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 8% 0%, rgba(255,255,255,0.4), transparent 40%),
+        linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+      color: #2B1A20;
+      padding: 48px 48px 44px;
+      border-radius: 3px;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.55) inset,
+        0 0 0 1px rgba(0,0,0,0.06),
+        0 8px 18px rgba(0,0,0,0.35),
+        0 30px 60px rgba(0,0,0,0.45);
+      transform: rotate(0.25deg);
+      overflow: hidden;
+      margin: 32px auto 0;
+      max-width: 560px;
+    }
+    .manifesto-paper::after {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+      opacity: 0.14;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.40  0 0 0 0 0.25  0 0 0 0.65 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+      mix-blend-mode: multiply;
+    }
+
+    .manifesto-vol {
+      font-family: var(--ui);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--maroon);
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* the FOLDED content: hidden initially, max-height grows on open */
+    .manifesto-fold {
+      position: relative;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2.2s cubic-bezier(.2,.7,.2,1);
+    }
+    .manifesto-paper.opened .manifesto-fold {
+      max-height: 3000px;
+    }
+    /* gradient fade hint at the bottom of the closed fold */
+    .manifesto-fold::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 0;
+      height: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      opacity: 0;
+    }
+
+    /* Wax seal anchored at the fold line */
+    .manifesto-sealwrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 28px 0 0;
+      z-index: 3;
+    }
+    .manifesto-sealwrap .seal-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(43,26,32,0.25), rgba(43,26,32,0.25), transparent);
+    }
+    .manifesto-sealwrap .seal {
+      width: 56px; height: 56px;
+    }
+    .manifesto-sealwrap .seal-half {
+      transition: transform 1.0s cubic-bezier(.2,.7,.2,1) 0.3s;
+    }
+    .manifesto-sealwrap .seal-half svg {
+      width: 56px; height: 56px;
+    }
+    .manifesto-sealwrap .seal-half.right svg { transform: translateX(-28px); }
+    .manifesto-paper.opened .manifesto-sealwrap .seal-half.left  { transform: translateX(-10px) rotate(-6deg); }
+    .manifesto-paper.opened .manifesto-sealwrap .seal-half.right { transform: translateX(10px)  rotate(6deg); }
+
+    .manifesto-prompt {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 14px;
+      color: rgba(43,26,32,0.55);
+      text-align: center;
+      margin-top: 18px;
+      transition: opacity 0.6s ease;
+      position: relative;
+      z-index: 2;
+    }
+    .manifesto-paper.opened .manifesto-prompt { opacity: 0; pointer-events: none; }
+
+    /* Letter content (after the fold opens) */
+    .manifesto-body {
+      font-family: var(--caslon);
+      font-size: 15px;
+      line-height: 1.72;
+      color: #2B1A20;
+      position: relative;
+      z-index: 2;
+      padding-top: 28px;
+    }
+    .manifesto-body p { margin: 0 0 14px; font-style: italic; }
+    .manifesto-body em.accent {
+      font-style: italic;
+      font-weight: 700;
+      color: var(--maroon);
+    }
+    .manifesto-pull {
+      margin: 24px 0;
+      padding: 4px 0 4px 22px;
+      border-left: 2px solid var(--maroon);
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 21px;
+      color: var(--maroon);
+      line-height: 1.4;
+      position: relative;
+    }
+    .manifesto-sign {
+      margin-top: 22px;
+      font-family: var(--hand);
+      font-size: 34px;
+      color: var(--maroon);
+      transform: rotate(-2deg);
+      display: inline-block;
+    }
+
+    /* Marginalia INSIDE the editors' letter (revealed after the letter opens) */
+    .scrawl-manifesto-1 {
+      position: absolute;
+      right: -8px; top: 380px;
+      max-width: 110px;
+      font-size: 21px;
+      color: var(--rose);
+      transform: rotate(-4deg);
+      opacity: 0;
+      transition: opacity 0.9s ease 1.4s;
+      z-index: 5;
+      font-family: var(--hand);
+    }
+    .scrawl-manifesto-1::before {
+      content: '';
+      position: absolute;
+      left: -22px; top: 12px;
+      width: 18px; height: 1px;
+      background: var(--rose);
+      transform: rotate(8deg);
+    }
+    .manifesto-paper.opened .scrawl-manifesto-1 { opacity: 1; }
+
+    .scrawl-manifesto-2 {
+      position: absolute;
+      right: 32px; bottom: 28px;
+      font-size: 24px;
+      color: var(--maroon);
+      font-weight: 600;
+      transform: rotate(-3deg);
+      opacity: 0;
+      transition: opacity 0.9s ease 1.8s;
+      z-index: 5;
+      font-family: var(--hand);
+    }
+    .manifesto-paper.opened .scrawl-manifesto-2 { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .scrawl-manifesto-1 { right: 6px; top: auto; bottom: 280px; max-width: 100px; font-size: 18px; }
+      .scrawl-manifesto-1::before { display: none; }
+      .scrawl-manifesto-2 { right: 18px; bottom: 24px; font-size: 21px; }
+    }
+
+    /* ============ COLOPHON / SIGNUP ============ */
+    .colophon {
+      max-width: 520px;
+      margin: 28px auto 0;
+      text-align: center;
+      position: relative;
+    }
+    .section-label {
+      font-family: var(--ui);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-label::before, .section-label::after {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+    .colophon h2 {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(28px, 4vw, 38px);
+      margin: 18px 0 12px;
+      color: var(--paper);
+    }
+    .colophon h2 .em {
+      font-family: var(--caslon);
+      font-style: italic;
+      font-weight: 700;
+      color: var(--blush);
+    }
+    .colophon .lede {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 15.5px;
+      color: rgba(217,206,204,0.65);
+      line-height: 1.55;
+      max-width: 380px;
+      margin: 0 auto 32px;
+    }
+    /* marginalia near the form */
+    .scrawl-colophon {
+      position: absolute;
+      top: 200px;
+      right: -90px;
+      font-size: 26px;
+      color: var(--maroon);
+      transform: rotate(-6deg);
+      font-family: var(--hand);
+    }
+    .scrawl-colophon::before {
+      content: '';
+      position: absolute;
+      left: -22px; top: 14px;
+      width: 18px; height: 1px;
+      background: var(--maroon);
+      transform: rotate(10deg);
+    }
+    @media (max-width: 900px) { .scrawl-colophon { display: none; } }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-bottom: 1px solid var(--rule);
+      padding: 0 2px 6px;
+      transition: border-color 0.3s ease;
+    }
+    .field:focus-within { border-color: var(--gold); }
+    .field label {
+      font-family: var(--ui);
+      font-size: 9.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .field input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--paper);
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 18px;
+      padding: 6px 0 4px;
+      caret-color: var(--gold);
+    }
+    .field input::placeholder { color: rgba(217,206,204,0.32); font-style: italic; }
+
+    .submit {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: var(--maroon);
+      border: 1px solid var(--maroon);
+      color: var(--paper);
+      padding: 16px 22px;
+      font-family: var(--ui);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: border-color 0.35s ease, letter-spacing 0.35s ease, transform 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .submit::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--rose);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.55s cubic-bezier(.7,.05,.2,1);
+      z-index: 0;
+    }
+    .submit > * { position: relative; z-index: 1; }
+    .submit:hover {
+      border-color: var(--rose);
+      letter-spacing: 0.36em;
+    }
+    .submit:hover::before { transform: scaleX(1); }
+    .submit:active { transform: translateY(1px); }
+
+    .micro {
+      margin-top: 18px;
+      font-family: var(--ui);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(217,206,204,0.45);
+      text-align: center;
+    }
+    .micro .dot { color: var(--gold); margin: 0 8px; }
+
+    .confirm {
+      display: none;
+      text-align: center;
+      margin: 0 auto;
+      padding: 36px 24px;
+      max-width: 420px;
+      border: 1px solid var(--rule);
+      background: radial-gradient(ellipse at top, rgba(184,150,90,0.06), transparent 60%);
+    }
+    .confirm.show { display: block; animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both; }
+    .confirm svg { color: var(--gold); margin-bottom: 14px; }
+    .confirm h3 {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 28px;
+      margin: 0 0 10px;
+      color: var(--paper);
+    }
+    .confirm p {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 15px;
+      color: rgba(217,206,204,0.7);
+      line-height: 1.55;
+      margin: 0 auto;
+      max-width: 320px;
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    /* ============ footer ============ */
+    .footnote {
+      margin: 72px auto 0;
+      max-width: 520px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .footnote .rule { width: 60px; height: 1px; background: var(--rule); }
+    .footnote .colo {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(217,206,204,0.42);
+    }
+    .footnote .legal {
+      font-family: var(--ui);
+      font-size: 9.5px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(217,206,204,0.38);
+    }
+
+    /* ============ responsive ============ */
+    @media (max-width: 900px) {
+      .nav { display: none; }
+    }
+    @media (max-width: 600px) {
+      .stage { padding: 22px 18px 60px; }
+      .hero { padding: 36px 0 40px; min-height: 70vh; }
+      .hero h1 { font-size: 46px; }
+      .hero-body { font-size: 16px; }
+      .cta-filled { padding: 16px 22px; font-size: 10.5px; }
+      .chapter-head h2 { font-size: 26px; }
+      .prose { font-size: 16.5px; }
+      .card { padding: 24px 22px 22px; }
+      .margin { top: 122px; right: 14px; width: 92px; font-size: 19px; }
+      .card-header .addressed { font-size: 19px; }
+      .seal { width: 54px; height: 54px; }
+      .seal-half svg { width: 54px; height: 54px; }
+      .seal-half.right svg { transform: translateX(-27px); }
+      .manifesto-paper { padding: 32px 24px 28px; }
+      .manifesto-pull { font-size: 18px; padding-left: 14px; }
+      .scrawl-colophon { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal], [data-reveal-delay] {
+        transition-duration: 0.001s !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+      .card-fold { transition: none !important; clip-path: inset(0 0 0 0) !important; }
+      .manifesto-fold { transition: none !important; max-height: 3000px !important; }
+      .margin, .scrawl, .scrawl-manifesto-1, .scrawl-manifesto-2 { opacity: 1 !important; transition: none !important; }
+      .seal-half { transition: none !important; }
+      .chapter-ribbon { transition: none !important; }
+      .particle { animation: none !important; opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Functional bookmark nav ===== -->
+  <nav class="nav" aria-label="Reading navigation">
+    <div class="nav-track" aria-hidden="true"></div>
+    <button class="nav-save" id="navSave" type="button" aria-label="Save my place"></button>
+    <button class="nav-item" data-target="hero">
+      <span class="nav-tick"></span>
+      <span class="nav-label">Preface</span>
+    </button>
+    <button class="nav-item" data-target="chapter-i">
+      <span class="nav-tick"></span>
+      <span class="nav-label">I &middot; Why</span>
+    </button>
+    <button class="nav-item" data-target="chapter-ii">
+      <span class="nav-tick"></span>
+      <span class="nav-label">II &middot; Who</span>
+    </button>
+    <button class="nav-item" data-target="chapter-iii">
+      <span class="nav-tick"></span>
+      <span class="nav-label">III &middot; Editors</span>
+    </button>
+    <button class="nav-item" data-target="register">
+      <span class="nav-tick"></span>
+      <span class="nav-label">Colophon</span>
+    </button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <main class="stage">
+
+    <header class="topbar">
+      <span class="wordmark">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+          <path d="M7 0 C7 4.2 4.2 7 0 7 C4.2 7 7 9.8 7 14 C7 9.8 9.8 7 14 7 C9.8 7 7 4.2 7 0 Z"/>
+        </svg>
+        Asterix
+      </span>
+      <span class="here">Preface</span>
+    </header>
+
+    <!-- ===== HERO (matches Vercel reference) ===== -->
+    <section class="hero" id="hero">
+      <!-- ambient particle dust -->
+      <div class="particles" aria-hidden="true">
+        <span class="particle" style="left:8%;  top:22%; --d:0s;   --t:9s;"></span>
+        <span class="particle" style="left:14%; top:68%; --d:1.5s; --t:11s;"></span>
+        <span class="particle" style="left:22%; top:14%; --d:3s;   --t:10s;"></span>
+        <span class="particle" style="left:38%; top:48%; --d:0.7s; --t:13s;"></span>
+        <span class="particle" style="left:52%; top:18%; --d:2.2s; --t:9s;"></span>
+        <span class="particle" style="left:64%; top:78%; --d:0s;   --t:12s;"></span>
+        <span class="particle" style="left:72%; top:32%; --d:1.4s; --t:10s;"></span>
+        <span class="particle" style="left:84%; top:60%; --d:3.4s; --t:11s;"></span>
+        <span class="particle" style="left:91%; top:18%; --d:2s;   --t:13s;"></span>
+        <span class="particle" style="left:46%; top:88%; --d:0.5s; --t:10s;"></span>
+        <span class="particle" style="left:30%; top:84%; --d:2.6s; --t:11s;"></span>
+        <span class="particle" style="left:88%; top:42%; --d:1.1s; --t:9s;"></span>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-eyebrow" data-reveal>
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+            <path d="M7 0 C7 4.2 4.2 7 0 7 C4.2 7 7 9.8 7 14 C7 9.8 9.8 7 14 7 C9.8 7 7 4.2 7 0 Z"/>
+          </svg>
+          A literary correspondence
+        </div>
+        <h1 data-reveal data-reveal-delay style="--d: 0.1s;">
+          Some love stories<br/>
+          begin with a <span class="em">sentence.</span>
+        </h1>
+        <p class="hero-body" data-reveal data-reveal-delay style="--d: 0.25s;">
+          Asterix is a literary correspondence platform &mdash; built for readers, writers, and the slowly-spoken. Find the reader whose margins resemble yours. Words first. Photographs, later.
+        </p>
+        <div class="hero-actions" data-reveal data-reveal-delay style="--d: 0.4s;">
+          <a href="#register" class="cta-filled">
+            <span>Reserve a card</span>
+          </a>
+          <a href="#letter" class="cta-ghost">
+            <span>Read the preface</span>
+            <span class="arr">&rarr;</span>
+          </a>
+        </div>
+        <div class="hero-foot" data-reveal data-reveal-delay style="--d: 0.55s;">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+            <path d="M7 0 C7 4.2 4.2 7 0 7 C4.2 7 7 9.8 7 14 C7 9.8 9.8 7 14 7 C9.8 7 7 4.2 7 0 Z"/>
+          </svg>
+          One reader a day &middot; chosen by how they read
+        </div>
+      </div>
+
+      <!-- hero marginalia -->
+      <div class="scrawl-hero" data-reveal data-reveal-delay style="--d: 0.85s;">
+        what is the sentence<br/>that&rsquo;s been<br/>following you?
+      </div>
+    </section>
+
+    <!-- ===== Centerpiece sample letter ===== -->
+    <section class="letter-section" id="letter" data-reveal>
+      <span class="stamp">this came today</span>
+      <article class="card" id="letterCard">
+        <div class="crease" aria-hidden="true"></div>
+        <span class="card-corner" aria-hidden="true"></span>
+
+        <div class="card-fold">
+          <header class="card-header">
+            <span class="addressed">For you,</span>
+            <span class="chapter-tag">Chapter 1 of 5</span>
+          </header>
+
+          <div class="excerpt">
+            <span class="lead">She was the kind of person</span> who underlined the same sentence in every book she gave away. I have three of those books. The sentence is different every time.
+            <div class="excerpt-meta">&mdash; from a letter, returned</div>
+          </div>
+
+          <footer class="card-foot">
+            <div class="portrait">
+              <div class="portrait-disc" id="portrait" aria-hidden="true"></div>
+              <div class="portrait-label">Their face clarifies as you write.</div>
+            </div>
+
+            <div class="seal" aria-hidden="true" title="Wax seal">
+              <div class="seal-half left">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <radialGradient id="wax" cx="40%" cy="35%" r="65%">
+                      <stop offset="0%"  stop-color="#A8425A"/>
+                      <stop offset="60%" stop-color="#6B1E3A"/>
+                      <stop offset="100%" stop-color="#3D0E22"/>
+                    </radialGradient>
+                  </defs>
+                  <circle cx="32" cy="32" r="26" fill="url(#wax)" />
+                  <circle cx="32" cy="32" r="22" fill="none" stroke="#3D0E22" stroke-width="0.6" opacity="0.5"/>
+                  <g transform="translate(32 32)" stroke="#F4ECDC" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.92">
+                    <line x1="0" y1="-9" x2="0" y2="9"/>
+                    <line x1="-9" y1="0" x2="9" y2="0"/>
+                    <line x1="-6.5" y1="-6.5" x2="6.5" y2="6.5"/>
+                    <line x1="6.5" y1="-6.5" x2="-6.5" y2="6.5"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="seal-half right">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="32" cy="32" r="26" fill="url(#wax)" />
+                  <circle cx="32" cy="32" r="22" fill="none" stroke="#3D0E22" stroke-width="0.6" opacity="0.5"/>
+                  <g transform="translate(32 32)" stroke="#F4ECDC" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.92">
+                    <line x1="0" y1="-9" x2="0" y2="9"/>
+                    <line x1="-9" y1="0" x2="9" y2="0"/>
+                    <line x1="-6.5" y1="-6.5" x2="6.5" y2="6.5"/>
+                    <line x1="6.5" y1="-6.5" x2="-6.5" y2="6.5"/>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </footer>
+        </div>
+
+        <div class="margin">this &mdash;<br/>three times.</div>
+      </article>
+    </section>
+
+    <div class="crux" data-reveal aria-hidden="true">
+      <span class="line"></span>
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor">
+        <path d="M7 0 C7 4.2 4.2 7 0 7 C4.2 7 7 9.8 7 14 C7 9.8 9.8 7 14 7 C9.8 7 7 4.2 7 0 Z"/>
+      </svg>
+      <span class="line"></span>
+    </div>
+
+    <!-- ===== CHAPTER I — Why ===== -->
+    <section class="chapter" id="chapter-i" data-reveal data-chapter="I">
+      <div class="chapter-ribbon" aria-hidden="true"><span class="num">I</span></div>
+      <header class="chapter-head">
+        <div class="chapter-label">Chapter I</div>
+        <h2>On <span class="em">why</span> this exists.</h2>
+      </header>
+      <div class="prose">
+        <p>
+          <span class="drop">M</span>odern dating asks one question, asked very fast: does this person look like someone you would want? It asks it of forty strangers in a coffee shop, before any of them has spoken. It asks it again tomorrow. It does not, at any point, ask what they keep on their bedside, or which sentence they have copied into the back of a notebook, or how they think when no one is watching.
+        </p>
+        <p>We think this is the wrong question, asked too soon.</p>
+        <p>
+          The thing that makes a person worth knowing &mdash; the way they read a paragraph, the books they have re&#8209;read, the lines they have lifted into the margin of another life &mdash; is <em class="accent">invisible</em> in a photograph. It surfaces in writing. It surfaces slowly. And it can only be found by people who are willing to look for it.
+        </p>
+        <p>Asterix is the place to look.</p>
+
+        <!-- marginalia: a reader's response in the right margin -->
+        <span class="scrawl scrawl-i tilted-right">the wrong question.<br/>every Saturday.</span>
+      </div>
+    </section>
+
+    <!-- ===== CHAPTER II — Who ===== -->
+    <section class="chapter" id="chapter-ii" data-reveal data-chapter="II">
+      <div class="chapter-ribbon" aria-hidden="true"><span class="num">II</span></div>
+      <header class="chapter-head">
+        <div class="chapter-label">Chapter II</div>
+        <h2>On <span class="em">who</span> this is for.</h2>
+      </header>
+      <div class="prose">
+        <p>
+          <span class="drop">T</span>his is for the kind of person who would write back. Who would rather read a paragraph than send a sticker. Who has, this week, kept a sentence &mdash; copied it into a notes app, a margin, a head&#8209;loop &mdash; because it described something they had felt but had not yet said.
+        </p>
+        <p>
+          It is for re&#8209;readers. For the ones who circle a phrase before they finish the page. For the ones who write more in private than they post in public. For the ones whose ideal first date includes a bookshop and a long walk back.
+        </p>
+        <p>
+          It is also, more honestly, for the kind of person who is <em class="accent">tired.</em> Of the swipe. Of the photograph. Of the slow erosion that comes from being shown forty strangers a day, asked to choose, and offered no language with which to do so.
+        </p>
+        <p>If any of that sounds like you, the rest of this letter is also.</p>
+
+        <!-- marginalia: a personal aside in the left margin -->
+        <span class="scrawl scrawl-ii tilted-left">guilty.<br/>(all of it.)</span>
+      </div>
+    </section>
+
+    <!-- ===== CHAPTER III — Editors' manifesto with full envelope-opening ===== -->
+    <section class="chapter chapter--letter" id="chapter-iii" data-reveal data-chapter="III">
+      <div class="chapter-ribbon" aria-hidden="true"><span class="num">III</span></div>
+
+      <!-- dark "manifesto" header — matches Image 2 reference -->
+      <div class="manifesto-banner">
+        <div class="manifesto-eyebrow">From the editors of Asterix</div>
+        <h2>A short <span class="em">manifesto</span>, for the slowly&#8209;spoken sort.</h2>
+        <div class="manifesto-rule" aria-hidden="true"></div>
+      </div>
+
+      <!-- The letter on paper. Closed by default; opens on scroll-in. -->
+      <article class="manifesto-paper" id="manifesto">
+        <div class="manifesto-vol">Vol. I &middot; No. 1</div>
+
+        <p style="font-family: var(--caslon); font-size: 15px; line-height: 1.72; color: #2B1A20; font-style: italic; position: relative; z-index: 2; margin: 0 0 14px;">
+          <span style="font-family: var(--caslon); float: left; font-size: 54px; line-height: 0.9; padding: 6px 10px 0 0; color: var(--maroon); font-style: italic; font-weight: 700;">W</span>e made Asterix because we were tired. Tired of the swipe, the photograph, the smile rehearsed on the way to a bar. Tired of being shown forty strangers in a coffee shop and asked, repeatedly, to choose one without speaking to any of them. Tired of an industry that solved a problem we did not have &mdash; how do I see <em class="accent" style="font-weight:700; color:var(--maroon)">more</em> people &mdash; and left untouched the problem we did: how do I know <em class="accent" style="font-weight:700; color:var(--maroon)">any</em> of them.
+        </p>
+
+        <p style="font-family: var(--caslon); font-size: 15px; line-height: 1.72; color: #2B1A20; font-style: italic; position: relative; z-index: 2; margin: 0;">
+          The premise here is not new. It is, in fact, very old. For most of human history, romance began in correspondence &mdash; a letter, a poem passed between hands, a sentence written in a margin and slid across a table. People knew the shape of each other&rsquo;s minds before the shape of each other&rsquo;s faces. The result was occasionally clumsy and frequently slow. The people who made it through were rarely surprised by who they ended up with.
+        </p>
+
+        <!-- the FOLD: wax seal sits here, marking what's hidden below -->
+        <div class="manifesto-sealwrap">
+          <div class="seal-rule" aria-hidden="true"></div>
+          <div class="seal" aria-hidden="true">
+            <div class="seal-half left">
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="26" fill="url(#wax)" />
+                <circle cx="32" cy="32" r="22" fill="none" stroke="#3D0E22" stroke-width="0.6" opacity="0.5"/>
+                <g transform="translate(32 32)" stroke="#F4ECDC" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.92">
+                  <line x1="0" y1="-9" x2="0" y2="9"/>
+                  <line x1="-9" y1="0" x2="9" y2="0"/>
+                  <line x1="-6.5" y1="-6.5" x2="6.5" y2="6.5"/>
+                  <line x1="6.5" y1="-6.5" x2="-6.5" y2="6.5"/>
+                </g>
+              </svg>
+            </div>
+            <div class="seal-half right">
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="26" fill="url(#wax)" />
+                <circle cx="32" cy="32" r="22" fill="none" stroke="#3D0E22" stroke-width="0.6" opacity="0.5"/>
+                <g transform="translate(32 32)" stroke="#F4ECDC" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.92">
+                  <line x1="0" y1="-9" x2="0" y2="9"/>
+                  <line x1="-9" y1="0" x2="9" y2="0"/>
+                  <line x1="-6.5" y1="-6.5" x2="6.5" y2="6.5"/>
+                  <line x1="6.5" y1="-6.5" x2="-6.5" y2="6.5"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="seal-rule" aria-hidden="true"></div>
+        </div>
+
+        <div class="manifesto-prompt">there is more &mdash; scroll on to break the seal.</div>
+
+        <!-- everything from here is HIDDEN until the letter opens -->
+        <div class="manifesto-fold">
+          <div class="manifesto-body">
+
+            <div class="manifesto-pull">
+              &ldquo;Photographs are not what is most you. The way you read is.&rdquo;
+            </div>
+
+            <p>
+              So we built an app where words come first. Each morning, you receive one reader &mdash; chosen not for their photograph but for the way they think. An excerpt. A note in the margin. A book on their bedside. If something stays with you, you write back. If nothing stays with you, you close the page. There are no streaks to maintain, no fires to keep alive, no anxiety pinging through the day.
+            </p>
+            <p>
+              The photograph comes, eventually. It clarifies a little with each letter. By the fifth, you know what they look like. By then, you also know whether they re&#8209;read books they have already finished, and whether they think Murakami is a draft of a feeling or the final one.
+            </p>
+            <p>
+              We have built every part of this slowly, in the hope that it will be used slowly. We trust the people who find it. We hope it finds <em class="accent">you.</em>
+            </p>
+            <div class="manifesto-sign">&mdash; the editors</div>
+          </div>
+        </div>
+
+        <!-- marginalia inside the letter, only visible after opening -->
+        <span class="scrawl-manifesto-1">&larr; print this.<br/>somewhere visible.</span>
+        <span class="scrawl-manifesto-2">(it has.)</span>
+      </article>
+    </section>
+
+    <div class="crux" data-reveal aria-hidden="true">
+      <span class="line"></span>
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor">
+        <path d="M7 0 C7 4.2 4.2 7 0 7 C4.2 7 7 9.8 7 14 C7 9.8 9.8 7 14 7 C9.8 7 7 4.2 7 0 Z"/>
+      </svg>
+      <span class="line"></span>
+    </div>
+
+    <!-- ===== COLOPHON / SIGNUP ===== -->
+    <section class="colophon" id="register" data-reveal>
+      <span class="section-label">Colophon</span>
+      <h2><span class="em">Reserve</span> a card.</h2>
+      <p class="lede">The beta opens in batches of fifty. We will write to you when your seat is ready &mdash; no sooner, no louder.</p>
+
+      <!-- marginalia near the form -->
+      <span class="scrawl-colophon">(finally.)</span>
+
+      <form id="signup" novalidate>
+        <div class="field">
+          <label for="name">Your name, written legibly</label>
+          <input id="name" name="name" type="text" placeholder="how you would sign a letter" autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="email">Where to write to you</label>
+          <input id="email" name="email" type="email" required placeholder="email" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="book">The book you re-read</label>
+          <input id="book" name="book" type="text" placeholder="a title, and an author" />
+        </div>
+
+        <button type="submit" class="submit">
+          <span>Send for an invitation</span>
+          <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="0" y1="5" x2="19" y2="5"/>
+            <polyline points="14,1 19,5 14,9"/>
+          </svg>
+        </button>
+      </form>
+
+      <p class="micro">
+        By invitation <span class="dot">&middot;</span>
+        iOS first <span class="dot">&middot;</span>
+        Silent until your seat opens
+      </p>
+
+      <div class="confirm" id="confirm" role="status" aria-live="polite">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+          <circle cx="22" cy="22" r="20"/>
+          <path d="M12 16 L22 24 L32 16" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 16 L12 30 L32 30 L32 16" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>Your card is reserved.</h3>
+        <p>A confirmation is on its way. When the next batch of fifty opens, you will hear from us &mdash; once.</p>
+      </div>
+    </section>
+
+    <footer class="footnote">
+      <span class="rule" aria-hidden="true"></span>
+      <span class="colo">Set in Cormorant, Caslon, and Jost.</span>
+      <span class="legal">&copy; Asterix Editions <span style="color:var(--gold)">&middot;</span> All correspondence private</span>
+    </footer>
+  </main>
+
+  <script>
+  (function () {
+
+    // ============ 1. Generic reveal observer ============
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+
+    document.querySelectorAll('[data-reveal]').forEach(function (el) {
+      revealObserver.observe(el);
+    });
+
+    // ============ 2. Centerpiece letter unfold ============
+    var card = document.getElementById('letterCard');
+    if (card) {
+      var letterObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            setTimeout(function () { card.classList.add('opened'); }, 350);
+            letterObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.45 });
+      letterObserver.observe(document.getElementById('letter'));
+    }
+
+    // ============ 3. Editors' manifesto envelope open ============
+    var manifesto = document.getElementById('manifesto');
+    if (manifesto) {
+      var manifestoObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            // brief moment to register the sealed state, then crack open
+            setTimeout(function () { manifesto.classList.add('opened'); }, 500);
+            manifestoObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.35 });
+      manifestoObserver.observe(manifesto);
+    }
+
+    // ============ 4. Functional bookmark — chapter nav + position memory ============
+    var navItems = Array.from(document.querySelectorAll('.nav-item'));
+    var sections = navItems.map(function (b) { return document.getElementById(b.dataset.target); });
+
+    // click-to-scroll
+    navItems.forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        var target = sections[i];
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // active-section highlighting on scroll
+    function setActive(idx) {
+      navItems.forEach(function (b, i) {
+        b.classList.toggle('active', i === idx);
+      });
+    }
+    function updateActive() {
+      var scrollPos = window.scrollY + window.innerHeight * 0.4;
+      var current = 0;
+      for (var i = 0; i < sections.length; i++) {
+        if (sections[i] && sections[i].offsetTop <= scrollPos) current = i;
+      }
+      setActive(current);
+    }
+    var rafTicking = false;
+    window.addEventListener('scroll', function () {
+      if (!rafTicking) {
+        requestAnimationFrame(function () { updateActive(); rafTicking = false; });
+        rafTicking = true;
+      }
+    }, { passive: true });
+    updateActive();
+
+    // ============ 5. Save / restore reading position (localStorage) ============
+    var STORAGE_KEY = 'asterix.preface.position';
+    var saveBtn = document.getElementById('navSave');
+    var toast = document.getElementById('toast');
+
+    function showToast(html, ms) {
+      toast.innerHTML = html;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(function () { toast.classList.remove('show'); }, ms || 3200);
+    }
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function () {
+        var pos = window.scrollY;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ pos: pos, when: Date.now() }));
+          saveBtn.setAttribute('data-saved', 'true');
+          setTimeout(function () { saveBtn.removeAttribute('data-saved'); }, 1600);
+          showToast('<span class="toast-mark">Bookmarked</span>Your place is kept. Come back when you can.');
+        } catch (e) {
+          showToast('<span class="toast-mark">Bookmark</span>Your browser would not let us keep your place.');
+        }
+      });
+    }
+
+    // restore on load: if a saved position exists from a previous visit, offer to return.
+    window.addEventListener('load', function () {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        var saved = JSON.parse(raw);
+        if (!saved || typeof saved.pos !== 'number' || saved.pos < 200) return;
+        // Don't auto-scroll; let the user choose.
+        setTimeout(function () {
+          showToast(
+            '<span class="toast-mark">Welcome back</span>' +
+            'You marked a page here last time. <a href="#" id="resumeLink" style="color:var(--maroon);font-weight:600;text-decoration:underline">Return to it &rarr;</a>',
+            6000
+          );
+          var link = document.getElementById('resumeLink');
+          if (link) {
+            link.addEventListener('click', function (e) {
+              e.preventDefault();
+              window.scrollTo({ top: saved.pos, behavior: 'smooth' });
+              toast.classList.remove('show');
+            });
+          }
+        }, 900);
+      } catch (e) { /* silent */ }
+    });
+
+    // ============ 6. Portrait clarifies on form focus (preview of reveal mechanic) ============
+    var form = document.getElementById('signup');
+    var portrait = document.getElementById('portrait');
+    if (form && portrait) {
+      var inputs = form.querySelectorAll('input');
+      inputs.forEach(function (el) {
+        el.addEventListener('focus', function () { portrait.classList.add('unblurring'); });
+        el.addEventListener('blur', function () {
+          if (!document.activeElement || !form.contains(document.activeElement)) {
+            portrait.classList.remove('unblurring');
+          }
+        });
+      });
+
+      // 7. Form submit
+      var confirmEl = document.getElementById('confirm');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('email').value.trim();
+        if (!email || email.indexOf('@') === -1) {
+          document.getElementById('email').focus();
+          return;
+        }
+        // Replace with your real waitlist POST.
+        form.style.display = 'none';
+        document.querySelector('.colophon .lede').style.display = 'none';
+        document.querySelector('.colophon h2').style.display = 'none';
+        document.querySelector('.colophon .section-label').style.display = 'none';
+        document.querySelector('.colophon .micro').style.display = 'none';
+        confirmEl.classList.add('show');
+        confirmEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Clear saved bookmark — they made it through.
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      });
+    }
+
+  })();
+  </script>
+</body>
+</html>

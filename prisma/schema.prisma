@@ -1,0 +1,15 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model InvitationRequest {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  book      String?
+  createdAt DateTime @default(now())
+}
