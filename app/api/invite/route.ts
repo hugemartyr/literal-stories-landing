@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { resend } from '@/lib/email';
+import WelcomeCard from '@/emails/welcome-card';
 
 export const runtime = 'nodejs';
 
@@ -33,6 +35,13 @@ export async function POST(req: Request) {
         email,
         book,
       },
+    });
+
+    await resend.emails.send({
+      from: 'Asterix Editions <onboarding@resend.dev>',
+      to: email,
+      subject: 'Your card is reserved — Asterix Editions',
+      html: WelcomeCard({ name, book }),
     });
 
     return NextResponse.json({
