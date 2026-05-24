@@ -12,4 +12,5 @@ model InvitationRequest {
   email     String   @unique
   book      String?
   createdAt DateTime @default(now())
+  email_sent Boolean  @default(false)
 }

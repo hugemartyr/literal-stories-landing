@@ -1,11 +1,6 @@
-import * as React from 'react';
+export const getWelcomeEmailHtml = (name: string, book?: string) => {
+  const bookLine = book ? `<tr><td dir="ltr" style="font-size:16px;font-family:'Libre Caslon Text',Georgia,serif;font-style:italic;color:#6B1E3A;padding:0 0 18px;line-height:1.72">We see you re-read <em style="font-weight:600;">${book}</em> — you're our kind of reader.</td></tr>` : '';
 
-interface WelcomeCardProps {
-  name: string;
-  book?: string;
-}
-
-export const WelcomeCard = ({ name, book }: WelcomeCardProps) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="format-detection" content="telephone=no, date=no, address=no, email=no"><meta name="x-apple-disable-message-reformatting"><style>body{margin:0;padding:0}table{mso-table-lspace:0;mso-table-rspace:0}p,span,h1,h2,h3,h4,h5,h6{margin:0;padding:0}p{line-height:inherit}a[x-apple-data-detectors]{color:inherit!important;text-decoration:inherit!important}#MessageViewBody a{color:inherit;text-decoration:none}img+div{display:none}.ecw{width:100%!important;min-width:0!important}</style><!--[if mso]><div>
                 <noscript>
                   <xml>
@@ -25,7 +20,5 @@ export const WelcomeCard = ({ name, book }: WelcomeCardProps) => {
                 </tr>
               </tbody>
             </table>
-          </center><![endif]--></td></tr></tbody></table></body></html>`;
+          </center><![endif]--></td></tr></tbody></table></body></html`;
 };
-
-export default WelcomeCard;
